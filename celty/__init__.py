@@ -1,12 +1,20 @@
 from __future__ import print_function, unicode_literals
-import argparse
+import click
 
-parser = argparse.ArgumentParser(
-	description="""Celty: combine Miyuki and aria2c for the ultimate anime downloader!""",
-	epilog="remember to add 'aria2c' to your path!")
-parser.add_argument("miyuki_path", help="the path to the Miyuki configuration file")
-
+@click.group()
 def main():
     """Where the journey begins..."""
-    args = parser.parse_args()
-    print(args.miyuki_path)
+    pass
+
+@main.command()
+@click.argument("miyuki-path")
+def start(miyuki_path):
+    raise NotImplementedError("start {0}".format(miyuki_path))
+
+@main.command()
+def stop():
+	raise NotImplementedError("stop")
+
+if __name__ == '__main__':
+	main()
+    
