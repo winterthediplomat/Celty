@@ -1,0 +1,1 @@
+git+http://github.com/alfateam123/pyaria2/#egg=pyaria2
