@@ -11,7 +11,7 @@ ARIA2C_PATH = '/home/alfateam/aria2-1.18.8-win-32bit-build1/aria2c.exe'
 
 class TestAriaCommunicatorCreation(unittest.TestCase):
     def test_createCommunicator(self):
-        self.aria_rpc = comm.AriaCommunicator()
+        self.aria_rpc = comm.AriaCommunicator(useRPCSecret=True, fixedSecret="ABCDEF")
         #this is just to check AriaCommunicator object works
         self.aria_rpc.ariaObj.shutdown() 
 
@@ -21,24 +21,25 @@ class TestAriaRunning(unittest.TestCase):
                                               useRPCSecret=True,
                                               fixedSecret="ROXASPLS")
 
-    # def test_isRunningAndShutdown(self):
-    #     please_kill_aria = False
-    #     try:
-    #         time.sleep(3) #wait 1 seconds for let it spawn correctly
-    #         #print("should be running...")
-    #         self.assertEqual(self.aria_rpc.isRunning(), True)
-    #         #print("oh, it's running!")
+    @unittest.skip("moved this kind of tests to pyaria2")
+    def test_isRunningAndShutdown(self):
+        please_kill_aria = False
+        try:
+            time.sleep(3) #wait 1 seconds for let it spawn correctly
+            #print("should be running...")
+            self.assertEqual(self.aria_rpc.isRunning(), True)
+            #print("oh, it's running!")
 
-    #         please_kill_aria = True
+            please_kill_aria = True
 
-    #         self.aria_rpc.kill()
-    #         time.sleep(3) #wait 1 seconds for let it terminate correctly
-    #         #print("should be dead...")
-    #         self.assertEqual(self.aria_rpc.isRunning(), False)
-    #         #print("oh, it's dead!")
-    #         please_kill_aria = False
-    #     finally:
-    #         #print("please_kill_aria: ", please_kill_aria)
-    #         if please_kill_aria:
-    #             self.aria_rpc.ariaObj.shutdown() #in case of errors, we'll kill it.
+            self.aria_rpc.kill()
+            time.sleep(3) #wait 1 seconds for let it terminate correctly
+            #print("should be dead...")
+            self.assertEqual(self.aria_rpc.isRunning(), False)
+            #print("oh, it's dead!")
+            please_kill_aria = False
+        finally:
+            #print("please_kill_aria: ", please_kill_aria)
+            if please_kill_aria:
+                self.aria_rpc.ariaObj.shutdown() #in case of errors, we'll kill it.
 

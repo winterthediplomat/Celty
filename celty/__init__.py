@@ -1,12 +1,12 @@
 from __future__ import print_function, unicode_literals
 import click
 from .conf import ConfReader
-from .communicator import AriaCommunicator, AriaSpawner
-from .fs import TorrentFinder
+from .communicator import AriaCommunicator
+from .torrent import TorrentFinder, TorrentInfo
 import logging
-from os.path import expandvars
+from os.path import expandvars, basename
 from os import getenv
-logging.basicConfig(filename=expandvars("$HOME/.celty.log"))
+logging.basicConfig(filename=expandvars("$HOME/.celty.log"), level=logging.DEBUG)
 
 @click.group()
 def main():
@@ -21,17 +21,21 @@ def start(miyuki_path):
                                     confReader.aria2Port,
                                     confReader.aria2UseSecret,
                                     confReader.aria2FixedRPCSecret)
-    # if not communicator.isRunning():
-    #     spawner = AriaSpawner(getenv("ARIA2C_PATH"))
-    #     spawner.spawn(confReader.aria2Port, confReader.aria2UseSecret, confReader.aria2FixedRPCSecret)
     torrentFinder = TorrentFinder(confReader.watchDir)
     for file_ in torrentFinder.list():
-        torrent_id = communicator.addTorrent(file_, confReader.globalDownloadDir) #TODO: each show in its own folder!
-        logging.info("torrent {0} has been added, its id is {1}".format(file_, torrent_id))
+        file_torrentname = basename(file_)
+        try:
+            downloadFolder = confReader.downloadDir(TorrentInfo.seriesFromPattern(file_torrentname, confReader)["name"])
+        except ValueError: #it should not happen, but never say never...
+            downloadFolder = confReader.globalDownloadDir
+            logging.info("couldn't find a series from {}, defaulting to {}".format(file_, downloadFolder))
+        logging.info("torrent {0} will be added at path {1}".format(file_, downloadFolder))
+        torrent_id = communicator.addTorrent(file_, downloadFolder)
 
-@main.command()
-def stop():
-    AriaSpawner(getenv("ARIA2C_PATH")).kill()
+#FIXME
+# @main.command()
+# def stop():
+#     AriaSpawner(getenv("ARIA2C_PATH")).kill()
 
 if __name__ == '__main__':
     main()
