@@ -10,6 +10,6 @@ You can add the following information, both at a _global_ level (outside the `se
   where you want to download your episodes.
 
 * seedTime
-  specify seeding time in _minutes_.
+  specify seeding time in _minutes_. If it's 0 (zero), it disables seeding.
 
 Look at `tests/celty.conf` for an example Miyuki configuration file.
