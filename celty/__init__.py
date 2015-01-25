@@ -16,12 +16,17 @@ def main():
 @main.command()
 @click.argument("miyuki-path")
 def start(miyuki_path):
+    logging.info("called celty start")
     confReader = ConfReader(miyuki_path)
+    logging.debug("created confReader, path is {}".format(miyuki_path))
     communicator = AriaCommunicator(confReader.aria2Host,
                                     confReader.aria2Port,
                                     confReader.aria2UseSecret,
                                     confReader.aria2FixedRPCSecret)
+    logging.debug("created communicator")
     torrentFinder = TorrentFinder(confReader.watchDir)
+    logging.debug("created torrent finder, watch dir is {}".format(confReader.watchDir))
+    logging.debug("torrents found: {}".format(len(list(torrentFinder.list()))))
     for file_ in torrentFinder.list():
         file_torrentname = basename(file_)
         try:
@@ -31,6 +36,7 @@ def start(miyuki_path):
             logging.info("couldn't find a series from {}, defaulting to {}".format(file_, downloadFolder))
         logging.info("torrent {0} will be added at path {1}".format(file_, downloadFolder))
         torrent_id = communicator.addTorrent(file_, downloadFolder)
+        logging.info("torrent {0} has gid {1}".format(file_, torrent_id))
 
 #FIXME
 # @main.command()
