@@ -11,7 +11,7 @@ ARIA2C_PATH = '/home/alfateam/aria2-1.18.8-win-32bit-build1/aria2c.exe'
 
 class TestAriaCommunicatorCreation(unittest.TestCase):
     def test_createCommunicator(self):
-        self.aria_rpc = comm.AriaCommunicator(useRPCSecret=True, fixedSecret="ABCDEF")
+        self.aria_rpc = comm.AriaCommunicator(port=9999, useRPCSecret=True, fixedSecret="ABCDEF")
         #this is just to check AriaCommunicator object works
         self.aria_rpc.ariaObj.shutdown() 
 
