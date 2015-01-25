@@ -3,7 +3,7 @@ from os import walk
 import re
 
 class TorrentInfo(object):
-    def __init__(self, series_name, fansub, episode, additionalInfo=None):
+    def __init__(self, series_name, fansub, episode, **additionalInfo):
         self._fansub      = fansub
         self._episode     = episode
         self._series_name = series_name
@@ -12,31 +12,18 @@ class TorrentInfo(object):
     @property
     def additionalInfo(self):
         return self._additionalInfo
-    @additionalInfo.setter
-    def additionalInfo(self, value):
-        self._additionalInfo = value
     
     @property
-    def fansub(self):
-        return self._fansub
-    @fansub.setter
-    def fansub(self, value):
-        self._fansub = value
+    def name(self):
+        return self._series_name
     
     @property
     def episode(self):
         return self._episode
-    @episode.setter
-    def episode(self, value):
-        self._episode = value
     
     @property
     def fansub(self):
         return self._fansub
-    @fansub.setter
-    def fansub(self, value):
-        self._fansub = value
-    
 
     @staticmethod
     def patternFromSeriesConf(series_conf):

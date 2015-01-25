@@ -16,7 +16,28 @@ class TestTorrentFinder(unittest.TestCase):
         self.assertNotEqual(list(finder.list()), [])
         self.assertEqual(list(finder.list()), ["tests/data/with_torrents/nisemono.torrent"])
 
-class TestTorrentInfo(unittest.TestCase):
+class TestTorrentInfoInitialization(unittest.TestCase):
+    def test_initializeNormal(self):
+        thor = torrent.TorrentInfo(series_name="Nisekoi",
+                                   fansub="Omnivium",
+                                   episode=5)
+        self.assertEqual(thor.name, "Nisekoi")
+        self.assertEqual(thor.fansub, "Omnivium")
+        self.assertEqual(thor.episode, 5)
+        self.assertEqual(thor.additionalInfo, dict())
+
+    def test_initializeWithInfo(self):
+        thor = torrent.TorrentInfo(series_name="Shigatsu wa Kimi no Uso",
+                                   fansub="Omnivium", #soon :grin:
+                                   episode=5,
+                                   crc="DADB0BED"
+                                   )
+        self.assertEqual(thor.name, "Shigatsu wa Kimi no Uso")
+        self.assertEqual(thor.fansub, "Omnivium")
+        self.assertEqual(thor.episode, 5)
+        self.assertEqual(thor.additionalInfo, {"crc":"DADB0BED"})
+
+class TestTorrentPatternFromSeries(unittest.TestCase):
     def setUp(self):
         self.conf = conf.ConfReader('tests/celty.conf')
 
