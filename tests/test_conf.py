@@ -1,15 +1,17 @@
 import unittest
 from celty import conf
+from io import StringIO
 
 CONFIGURATION = "tests/celty.conf"
 
 class TestConfigurationReaderExists(unittest.TestCase):
     def test_loadConfReader(self):
-        conf.ConfReader(CONFIGURATION)
+        conf.ConfReader(open(CONFIGURATION))
 
 class TestConfigurationReader(unittest.TestCase):
     def setUp(self):
-        self.reader = conf.ConfReader(CONFIGURATION)
+        self.reader = conf.ConfReader(open(CONFIGURATION))
+
 
     def test_dataAreImportedCorrectly(self):
         try:
@@ -36,18 +38,8 @@ class TestConfigurationReader(unittest.TestCase):
         self.assertEqual(self.reader.seedTime("Shigatsu"), 25)
         self.assertEqual(self.reader.seedTime("Sora no Woto"), 10)
 
-    #TODO: use test doubles to check if it works, without having a real file
-    @unittest.skip("use test doubles to generate a fake file!")
-    def test_aria2Host_specified(self):
-        self.assertEqual(self.reader.aria2Host, "lol.alfa.moe")
-
     def test_aria2Host_notspecified(self):
         self.assertEqual(self.reader.aria2Host, "localhost")
-
-    #TODO: use test doubles to check if it works, without having a real file
-    @unittest.skip("use test doubles to generate a fake file!")
-    def test_aria2Port_specified(self):
-        self.assertEqual(self.reader.aria2Port, 9999)
 
     def test_aria2Port_notspecified(self):
         self.assertEqual(self.reader.aria2Port, 6800) #default port
@@ -55,24 +47,53 @@ class TestConfigurationReader(unittest.TestCase):
     def test_aria2UseSecret_specified(self):
         self.assertEqual(self.reader.aria2UseSecret, False)
 
-    #TODO: use test doubles to check if it works, without having a real file
-    @unittest.skip("use test doubles to generate a fake file!")
-    def test_aria2UseSecret_notspecified(self):
-        self.assertEqual(self.reader.aria2UseSecret, True)
 
     def test_aria2FixedRPCSecret_specified(self):
         self.assertEqual(self.reader.aria2FixedRPCSecret, "ABCDEF")
 
-    #TODO: use test doubles to check if it works, without having a real file
-    @unittest.skip("use test doubles to generate a fake file!")
+
+class TestConfigurationReaderDouble(unittest.TestCase):
+    def setUp(self):
+        self.fake_conf = u"""
+        watchDir:      "F:/torrents/torrents"
+        refreshEvery:  1h
+        notifications:
+          enabled: true
+        download:
+          downloadDir: "F:/global_folder"
+          aria2:
+            aria2Host: lol.alfa.moe
+            aria2Port: 9999
+            useRPCSecret: true
+
+        series:
+          - name: Shigatsu
+            fansub: Akindo-SSK
+            episodes:
+              from: 12
+            download:
+              seedTime: 25
+        """
+        self.reader = conf.ConfReader(StringIO(self.fake_conf))
+
+    def test_aria2Port_specified(self):
+        self.assertEqual(self.reader.aria2Port, 9999)
+
+    def test_aria2UseSecret_notspecified(self):
+        self.assertEqual(self.reader.aria2UseSecret, True)
+
     def test_aria2FixedRPCSecret_notspecified(self):
         self.assertEqual(self.reader.aria2FixedRPCSecret, None)
+
+    def test_aria2Host_specified(self):
+        self.assertEqual(self.reader.aria2Host, "lol.alfa.moe")
 
 
 class TestConfigurationReaderErrors(unittest.TestCase):
     def setUp(self):
-        self.reader = conf.ConfReader(CONFIGURATION)
+        self.reader = conf.ConfReader(open(CONFIGURATION))
 
+    @unittest.skip("a single string is valid yaml. IOErrors are, with this modification, handled outside confReader.")
     def test_invalidMiyukiPath(self):
         self.assertRaises(IOError, conf.ConfReader, ('lolinvalid.conf'))
 

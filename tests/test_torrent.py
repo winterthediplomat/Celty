@@ -39,7 +39,7 @@ class TestTorrentInfoInitialization(unittest.TestCase):
 
 class TestTorrentPatternFromSeries(unittest.TestCase):
     def setUp(self):
-        self.conf = conf.ConfReader('tests/celty.conf')
+        self.conf = conf.ConfReader(open('tests/celty.conf'))
 
     def test_patternFromSeriesConf_Nisekoi(self):
         self.assertEqual(
@@ -53,7 +53,7 @@ class TestTorrentPatternFromSeries(unittest.TestCase):
         
 class TestTorrentSeriesFromPattern(unittest.TestCase):
     def setUp(self):
-        self.conf = conf.ConfReader('tests/celty.conf')
+        self.conf = conf.ConfReader(open('tests/celty.conf'))
 
     def test_seriesFromPattern_Nisekoi(self):
         self.assertEqual(

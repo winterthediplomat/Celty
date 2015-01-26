@@ -4,12 +4,12 @@ class ConfReader(object):
     """
     ConfReader parses Miyuki configuration reader
     """
-    def __init__(self, miyuki_conf_path):
-        self.miyuki_conf_path = miyuki_conf_path
+    def __init__(self, miyuki_conf_file):
+        self.miyuki_conf_file = miyuki_conf_file
         self.parseConf()
 
     def parseConf(self):
-        self.miyuki_data = yaml.load(open(self.miyuki_conf_path))
+        self.miyuki_data = yaml.load(self.miyuki_conf_file)
 
     def extractShowInfo(self, show_name):
         try:
