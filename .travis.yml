@@ -1,7 +1,6 @@
 #loltravis
 language: python
 python:
-  - "2.6"
   - "2.7"
   - "3.2"
   - "3.3"
@@ -10,6 +9,8 @@ python:
 before_install:
   - sudo apt-get update
   - sudo apt-get install aria2
+  # start it here, so we can check if we have problems during tests or what
+  - aria2c --rcp-enable=true --listen-rcp-port=9999 --rcp-secret=ABCDEF
 # command to install dependencies
 install: 
   - pip install . -r requirements.txt --upgrade

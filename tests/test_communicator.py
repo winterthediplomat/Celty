@@ -20,4 +20,4 @@ class TestAriaSecretGeneration(unittest.TestCase):
     def test_generateSecret(self):
         secret = comm.AriaCommunicator.generateSecret()
         self.assertEqual(len(secret), 15)
-        self.assertEqual(filter(lambda chr_: chr_ not in letters, secret), str())
+        self.assertEqual("".join(chr_ for chr_ in secret if chr_ not in letters), str())
