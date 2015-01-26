@@ -3,6 +3,7 @@ from celty import conf
 from celty import communicator as comm
 import time
 from pyaria2 import PyAria2
+from string import ascii_letters as letters
 
 CONFIGURATION = "tests/celty.conf"
 ARIA_HOST = 'localhost'
@@ -15,31 +16,8 @@ class TestAriaCommunicatorCreation(unittest.TestCase):
         #this is just to check AriaCommunicator object works
         self.aria_rpc.ariaObj.shutdown() 
 
-class TestAriaRunning(unittest.TestCase):
-    def setUp(self):
-        self.aria_rpc = comm.AriaCommunicator(port=6969,
-                                              useRPCSecret=True,
-                                              fixedSecret="ROXASPLS")
-
-    @unittest.skip("moved this kind of tests to pyaria2")
-    def test_isRunningAndShutdown(self):
-        please_kill_aria = False
-        try:
-            time.sleep(3) #wait 1 seconds for let it spawn correctly
-            #print("should be running...")
-            self.assertEqual(self.aria_rpc.isRunning(), True)
-            #print("oh, it's running!")
-
-            please_kill_aria = True
-
-            self.aria_rpc.kill()
-            time.sleep(3) #wait 1 seconds for let it terminate correctly
-            #print("should be dead...")
-            self.assertEqual(self.aria_rpc.isRunning(), False)
-            #print("oh, it's dead!")
-            please_kill_aria = False
-        finally:
-            #print("please_kill_aria: ", please_kill_aria)
-            if please_kill_aria:
-                self.aria_rpc.ariaObj.shutdown() #in case of errors, we'll kill it.
-
+class TestAriaSecretGeneration(unittest.TestCase):
+    def test_generateSecret(self):
+        secret = comm.AriaCommunicator.generateSecret()
+        self.assertEqual(len(secret), 15)
+        self.assertEqual(filter(lambda chr_: chr_ not in letters, secret), str())

@@ -19,6 +19,9 @@ class TestConfigurationReader(unittest.TestCase):
             self.assertNotEqual(self.reader.miyuki_data, None)
             self.assertEqual(self.reader.miyuki_data["notifications"], {"enabled": True})
 
+    def test_watchDir(self):
+        self.assertEqual(self.reader.watchDir, "F:/torrents/torrents")
+
     def test_globalDownloadDirIsImportedCorrectly(self):
         self.assertEqual(self.reader.globalDownloadDir, "F:/global_folder")
 
@@ -32,6 +35,39 @@ class TestConfigurationReader(unittest.TestCase):
     def test_seedTimePerSerieIsImportedCorrectly(self):
         self.assertEqual(self.reader.seedTime("Shigatsu"), 25)
         self.assertEqual(self.reader.seedTime("Sora no Woto"), 10)
+
+    #TODO: use test doubles to check if it works, without having a real file
+    @unittest.skip("use test doubles to generate a fake file!")
+    def test_aria2Host_specified(self):
+        self.assertEqual(self.reader.aria2Host, "lol.alfa.moe")
+
+    def test_aria2Host_notspecified(self):
+        self.assertEqual(self.reader.aria2Host, "localhost")
+
+    #TODO: use test doubles to check if it works, without having a real file
+    @unittest.skip("use test doubles to generate a fake file!")
+    def test_aria2Port_specified(self):
+        self.assertEqual(self.reader.aria2Port, 9999)
+
+    def test_aria2Port_notspecified(self):
+        self.assertEqual(self.reader.aria2Port, 6800) #default port
+
+    def test_aria2UseSecret_specified(self):
+        self.assertEqual(self.reader.aria2UseSecret, False)
+
+    #TODO: use test doubles to check if it works, without having a real file
+    @unittest.skip("use test doubles to generate a fake file!")
+    def test_aria2UseSecret_notspecified(self):
+        self.assertEqual(self.reader.aria2UseSecret, True)
+
+    def test_aria2FixedRPCSecret_specified(self):
+        self.assertEqual(self.reader.aria2FixedRPCSecret, "ABCDEF")
+
+    #TODO: use test doubles to check if it works, without having a real file
+    @unittest.skip("use test doubles to generate a fake file!")
+    def test_aria2FixedRPCSecret_notspecified(self):
+        self.assertEqual(self.reader.aria2FixedRPCSecret, None)
+
 
 class TestConfigurationReaderErrors(unittest.TestCase):
     def setUp(self):

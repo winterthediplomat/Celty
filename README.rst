@@ -1,7 +1,7 @@
 Celty : Miyuki x aria2c
 =======================
 
-Celty mixes the power of aria2c and the simplicity of `Miyuki <http://github.com/RoxasShadow/Miyuki>`_ to bring you the ultimate automatic anime downloader.
+Celty mixes the power of `aria2c <http://aria2.sourceforge.net/>`_ and the simplicity of `Miyuki <http://github.com/RoxasShadow/Miyuki>`_ to bring you the ultimate automatic anime downloader.
 
 Why did you start this project?
 -------------------------------
@@ -20,7 +20,11 @@ Dependencies
   
   - pyyaml (for Miyuki conf file parsing)
 
+  - click (command line handling)
+
   - alfateam123/pyaria2 (use "-r requirements.txt" with pip!)
+
+They will be installed automatically when installing Celty.
 
 * Third-party apps
   

@@ -4,7 +4,7 @@ from random import choice
 from string import ascii_letters as letters
 
 class AriaCommunicator(object):
-    def __init__(self, host="localhost", port=6800, useRPCSecret=False, fixedSecret=None):
+    def __init__(self, host="localhost", port=6800, useRPCSecret=False, fixedSecret=None, globalOptions=None):
         self.host = host
         self.port = port
         #self.useRPCSecret = useRPCSecret
@@ -13,8 +13,14 @@ class AriaCommunicator(object):
         #self.rpcSecret = "token:{0}".format(secret)
         rpc_conf = {"useSecret":useRPCSecret, "secret":secret}
         self.ariaObj = PyAria2(self.host, self.port, rpcSecret=rpc_conf)
+        if globalOptions:
+            self.setGlobalOptions(globalOptions)
 
-    def generateSecret(self):
+    def setGlobalOptions(self, options):
+        self.ariaObj.changeGlobalOption(options)
+
+    @staticmethod
+    def generateSecret():
         def gimmeLetters(how_many):
             for i in range(how_many):
                 yield choice(letters)
@@ -27,5 +33,5 @@ class AriaCommunicator(object):
     def kill(self):
         return self.ariaObj.shutdown()
 
-    def addTorrent(self, torrentpath, downloadDir):
-        self.ariaObj.addTorrent(torrentpath, options={"dir":downloadDir})
+    def addTorrent(self, torrentpath, options):
+        return self.ariaObj.addTorrent(torrentpath, options=options)

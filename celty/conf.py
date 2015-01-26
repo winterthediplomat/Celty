@@ -23,9 +23,9 @@ class ConfReader(object):
         try:
             return self.extractShowInfo(show_name)["download"]
         except KeyError:
-        	#no "download" section has been declared for this show
-        	#use global definitions
-        	return self.miyuki_data["download"]
+            #no "download" section has been declared for this show
+            #use global definitions
+            return self.miyuki_data["download"]
 
     @property
     def watchDir(self):
@@ -37,13 +37,19 @@ class ConfReader(object):
 
     @property
     def globalSeedTime(self):
-        return self.miyuki_data["download"]["seedTime"]
+        try:
+            return self.miyuki_data["download"]["seedTime"]
+        except KeyError:
+            return 0
     
     def downloadDir(self, show_name):
         return self.extractShowDownloadInfo(show_name)["downloadDir"]
 
     def seedTime(self, show_name):
-        return self.extractShowDownloadInfo(show_name)["seedTime"]
+        try:
+            return self.extractShowDownloadInfo(show_name)["seedTime"]
+        except KeyError:
+            return self.globalSeedTime
 
     @property
     def aria2Host(self):
