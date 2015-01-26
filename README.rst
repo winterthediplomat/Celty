@@ -27,6 +27,8 @@ What do I have to do?
 
 4. enjoy your animu
 
+Please note that Celty does not start Miyuki: you have to launch it manually.
+
 Why did you start this project?
 -------------------------------
 
@@ -56,4 +58,4 @@ They will be installed automatically when installing Celty.
   
   - Miyuki
 
-Be sure that aria2c is compiled with torrent and xml-rcp support.
+Be sure that aria2c is compiled with torrent and xml-rcp support. Ruby is needed for running Miyuki.
