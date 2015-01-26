@@ -10,7 +10,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install aria2
   # start it here, so we can check if we have problems during tests or what
-  - nohup aria2c --enable-rpc=true --rpc-listen-port=9999 --rpc-secret=ABCDEF &
+  - nohup aria2c --enable-rpc=true --rpc-listen-port=9999 &
 # command to install dependencies
 install: 
   - pip install . -r requirements.txt --upgrade
