@@ -3,6 +3,30 @@ Celty : Miyuki x aria2c
 
 Celty mixes the power of `aria2c <http://aria2.sourceforge.net/>`_ and the simplicity of `Miyuki <http://github.com/RoxasShadow/Miyuki>`_ to bring you the ultimate automatic anime downloader.
 
+What does it do?
+----------------
+
+.. image:: https://cdn.mediacru.sh/q/qvBAHdEvhkXK.png
+
+In short, it uses an ad-hoc modified Miyuki configuration file to locate where it downloaded your animu torrents, starts an aria2 instance and loads all the torrents, saving them in your favourite folders. More notes on the needed modifications can be found at docs/miyuki_conf_changes.md
+
+What do I have to do?
+---------------------
+
+1. Modify your Miyuki configuration to include at least this, in the global section
+
+.. code:: yaml
+
+   download:
+     - downloadDir: /my/download/dir
+     - seedTime: 10 #optional, default is 0 (zero)
+
+2. run `celty start path/to/miyuki.conf`
+
+3. wait a bit
+
+4. enjoy your animu
+
 Why did you start this project?
 -------------------------------
 
