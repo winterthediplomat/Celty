@@ -1,4 +1,5 @@
 import yaml
+import logging
 
 class ConfReader(object):
     """
@@ -10,6 +11,7 @@ class ConfReader(object):
 
     def parseConf(self):
         self.miyuki_data = yaml.load(self.miyuki_conf_file)
+        logging.debug("parse_conf", self.miyuki_data)
 
     def extractShowInfo(self, show_name):
         try:
