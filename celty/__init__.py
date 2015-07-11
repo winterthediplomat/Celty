@@ -69,6 +69,24 @@ def start(miyuki_path):
 #     logging.debug("created communicator")
 #     communicator.kill()
 
+@main.command()
+def start_aria(port=6969, secret="celtyftw"):
+    """
+    starts aria2
+    """
+    communicator = AriaCommunicator("localhost",
+                                    port,
+                                    True,
+                                    secret)
+
+@main.command()
+def add(torrentpath):
+    """
+    adds a torrent in the 
+    """
+    raise NotImplementedError()
+
+
 if __name__ == '__main__':
     main()
     
