@@ -6,6 +6,7 @@ from .torrent import TorrentFinder, TorrentInfo
 import logging
 from os.path import expandvars, basename, join
 from os import getenv
+import json
 logging.basicConfig(filename=expandvars("$HOME/.celty.log"), level=logging.DEBUG)
 
 @click.group()
@@ -86,6 +87,10 @@ def add(miyuki_path, torrent_path):
     """
     adds a torrent in the 
     """
+    internal_add(miyuki_path, torrent_path)
+
+
+def internal_add(miyuki_path, torrent_path):
     logging.info("called celty add {0} {1}".format(miyuki_path, torrent_path))
     confReader = ConfReader(open(miyuki_path))
     logging.debug("created confReader, path is {}".format(miyuki_path))
@@ -95,8 +100,23 @@ def add(miyuki_path, torrent_path):
                                     confReader.aria2FixedRPCSecret)
     logging.debug("created communicator")
     torrent_path = join(confReader.watchDir, torrent_path)
-    torrent_id = communicator.addTorrent(torrent_path+".torrent", {"dir":"/home/winter"})
+    torrent_id = communicator.addTorrent(torrent_path+".torrent", {"dir":confReader.globalDownloadDir})
     logging.info("added torrent {0} to aria2".format(torrent_id))
+
+@main.command()
+@click.argument("miyuki_path")
+@click.argument("variable")
+def get(miyuki_path, variable):
+    """
+    please note that the variable must be the same you modify in the conf!
+    for now, it works only for global variables.
+    """
+    print(internal_get(miyuki_path, variable), end="")
+
+def internal_get(miyuki_path, variable):
+    confReader = ConfReader(open(miyuki_path))
+    return confReader.miyuki_data[variable]
+
 
 if __name__ == '__main__':
     main()
