@@ -4,8 +4,9 @@ from .conf import ConfReader
 from .communicator import AriaCommunicator
 from .torrent import TorrentFinder, TorrentInfo
 import logging
-from os.path import expandvars, basename
+from os.path import expandvars, basename, join
 from os import getenv
+import json
 logging.basicConfig(filename=expandvars("$HOME/.celty.log"), level=logging.DEBUG)
 
 @click.group()
@@ -23,7 +24,7 @@ def start(miyuki_path):
     all the torrents it finds in watch directory
     """
     logging.info("called celty start")
-    confReader = ConfReader(miyuki_path)
+    confReader = ConfReader(open(miyuki_path))
     logging.debug("created confReader, path is {}".format(miyuki_path))
     communicator = AriaCommunicator(confReader.aria2Host,
                                     confReader.aria2Port,
@@ -52,11 +53,11 @@ def start(miyuki_path):
         torrent_id = communicator.addTorrent(file_, {"dir":downloadFolder, "seed-time":seedingTime})
         logging.info("torrent {0} has gid {1}".format(file_, torrent_id))
 
-# @main.command()
-# def stop():
-#     """
-#     $ celty stop
-
+#@main.command()
+#def stop():
+#    """
+#    $ celty stop
+#
 #     stops the aria2c server specified.
 #     """
 #     logging.info("called celty stop")
@@ -68,6 +69,54 @@ def start(miyuki_path):
 #                                     confReader.aria2FixedRPCSecret)
 #     logging.debug("created communicator")
 #     communicator.kill()
+
+@main.command()
+def start_aria(port=6969, secret="celtyftw"):
+    """
+    starts aria2
+    """
+    communicator = AriaCommunicator("localhost",
+                                    port,
+                                    True,
+                                    secret)
+
+@main.command()
+@click.argument("miyuki_path")
+@click.argument("torrent_path")
+def add(miyuki_path, torrent_path):
+    """
+    adds a torrent in the 
+    """
+    internal_add(miyuki_path, torrent_path)
+
+
+def internal_add(miyuki_path, torrent_path):
+    logging.info("called celty add {0} {1}".format(miyuki_path, torrent_path))
+    confReader = ConfReader(open(miyuki_path))
+    logging.debug("created confReader, path is {}".format(miyuki_path))
+    communicator = AriaCommunicator(confReader.aria2Host,
+                                    confReader.aria2Port,
+                                    confReader.aria2UseSecret,
+                                    confReader.aria2FixedRPCSecret)
+    logging.debug("created communicator")
+    torrent_path = join(confReader.watchDir, torrent_path)
+    torrent_id = communicator.addTorrent(torrent_path+".torrent", {"dir":confReader.globalDownloadDir})
+    logging.info("added torrent {0} to aria2".format(torrent_id))
+
+@main.command()
+@click.argument("miyuki_path")
+@click.argument("variable")
+def get(miyuki_path, variable):
+    """
+    please note that the variable must be the same you modify in the conf!
+    for now, it works only for global variables.
+    """
+    print(internal_get(miyuki_path, variable), end="")
+
+def internal_get(miyuki_path, variable):
+    confReader = ConfReader(open(miyuki_path))
+    return confReader.miyuki_data[variable]
+
 
 if __name__ == '__main__':
     main()
