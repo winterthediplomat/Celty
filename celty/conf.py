@@ -1,6 +1,8 @@
 import yaml
 import logging
 
+class InvalidPropertyError(Exception): pass
+
 class ConfReader(object):
     """
     ConfReader parses Miyuki configuration reader
@@ -29,6 +31,15 @@ class ConfReader(object):
             #use global definitions
             return self.miyuki_data["download"]
 
+    def propertyByName(self, name):
+        try:
+            datadict = self.miyuki_data
+            for crumb in name.split("."):
+                datadict = datadict[crumb]
+            return datadict
+        except (KeyError, TypeError):
+            raise InvalidPropertyError(name)
+    
     @property
     def watchDir(self):
         return self.miyuki_data["watchDir"]
@@ -80,7 +91,6 @@ class ConfReader(object):
             return self.miyuki_data["download"]["aria2"]["fixedRPCSecret"]
         except KeyError:
             return None
-
     @property
     def series_names(self):
         return [show["name"] for show in self.miyuki_data["series"]]

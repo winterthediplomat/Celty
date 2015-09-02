@@ -47,10 +47,8 @@ class TestConfigurationReader(unittest.TestCase):
     def test_aria2UseSecret_specified(self):
         self.assertEqual(self.reader.aria2UseSecret, False)
 
-
     def test_aria2FixedRPCSecret_specified(self):
         self.assertEqual(self.reader.aria2FixedRPCSecret, "ABCDEF")
-
 
 class TestConfigurationReaderDouble(unittest.TestCase):
     def setUp(self):
@@ -88,6 +86,16 @@ class TestConfigurationReaderDouble(unittest.TestCase):
     def test_aria2Host_specified(self):
         self.assertEqual(self.reader.aria2Host, "lol.alfa.moe")
 
+    def test_propertyByName_doesnotexist(self):
+        self.assertRaises(conf.InvalidPropertyError, lambda : self.reader.propertyByName("pippo.pluto"))
+        self.assertRaises(conf.InvalidPropertyError, lambda : self.reader.propertyByName("notification.deeznuts"))
+        self.assertRaises(conf.InvalidPropertyError, lambda : self.reader.propertyByName("notifications.enabled.nicola"))
+
+    def test_propertyByName_watchdir(self):
+        self.assertEqual(self.reader.propertyByName("watchDir"), self.reader.watchDir)
+
+    def test_propertyByName_notifications(self):
+        self.assertEqual(self.reader.propertyByName("notifications.enabled"), True)
 
 class TestConfigurationReaderErrors(unittest.TestCase):
     def setUp(self):

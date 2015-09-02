@@ -1,6 +1,6 @@
-from __future__ import print_function, unicode_literals
+from __future__ import print_function
 import click
-from .conf import ConfReader
+from .conf import ConfReader, InvalidPropertyError
 from .communicator import AriaCommunicator
 from .torrent import TorrentFinder, TorrentInfo
 import logging
@@ -8,6 +8,7 @@ from os.path import expandvars, basename, join
 from os import getenv
 import json
 logging.basicConfig(filename=expandvars("$HOME/.celty.log"), level=logging.DEBUG)
+import sys
 
 @click.group()
 def main():
@@ -110,12 +111,20 @@ def get(miyuki_path, variable):
     """
     please note that the variable must be the same you modify in the conf!
     for now, it works only for global variables.
+    
+    e.g: if you want to know if notifications are enabled, ask `celty get notifications.enabled`.
+         for the watchdir path, ask `celty get watchDir`
+
+    return code is 1 if Celty cannot find the value in the configuration.
     """
-    print(internal_get(miyuki_path, variable), end="")
+    try:
+        print(internal_get(miyuki_path, variable), end="")
+    except InvalidPropertyError:
+        sys.exit(1)
 
 def internal_get(miyuki_path, variable):
     confReader = ConfReader(open(miyuki_path))
-    return confReader.miyuki_data[variable]
+    return confReader.propertyByName(variable)
 
 
 if __name__ == '__main__':
