@@ -1,4 +1,4 @@
-Celty : Miyuki x aria2c
+Celty : (Miyuki x aria2) command line interface
 =======================
 
 Celty mixes the power of `aria2c <http://aria2.sourceforge.net/>`_ and the simplicity of `Miyuki <http://github.com/RoxasShadow/Miyuki>`_ to bring you the ultimate automatic anime downloader.
