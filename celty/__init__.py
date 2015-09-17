@@ -76,6 +76,7 @@ def start_aria(port=6969, secret="celtyftw"):
     """
     starts aria2
     """
+    logging.info("called `celty start_aria`")
     communicator = AriaCommunicator("localhost",
                                     port,
                                     True,
@@ -86,13 +87,13 @@ def start_aria(port=6969, secret="celtyftw"):
 @click.argument("torrent_path")
 def add(miyuki_path, torrent_path):
     """
-    adds a torrent in the 
+    adds a torrent to the aria2 daemon to be downloaded.
     """
     internal_add(miyuki_path, torrent_path)
 
 
 def internal_add(miyuki_path, torrent_path):
-    logging.info("called celty add {0} {1}".format(miyuki_path, torrent_path))
+    logging.info("called `celty add {0} {1}`".format(miyuki_path, torrent_path))
     confReader = ConfReader(open(miyuki_path))
     logging.debug("created confReader, path is {}".format(miyuki_path))
     communicator = AriaCommunicator(confReader.aria2Host,
@@ -101,7 +102,14 @@ def internal_add(miyuki_path, torrent_path):
                                     confReader.aria2FixedRPCSecret)
     logging.debug("created communicator")
     torrent_path = join(confReader.watchDir, torrent_path)
-    torrent_id = communicator.addTorrent(torrent_path+".torrent", {"dir":confReader.globalDownloadDir})
+    
+    try:
+        seriesConf = TorrentInfo.seriesFromPattern(file_torrentname, confReader)
+        downloadFolder = confReader.downloadDir(seriesConf["name"])
+    except ValueError:
+        downloadFolder = confReader.globalDownloadDir
+
+    torrent_id = communicator.addTorrent(torrent_path+".torrent", {"dir":downloadFolder})
     logging.info("added torrent {0} to aria2".format(torrent_id))
 
 @main.command()
