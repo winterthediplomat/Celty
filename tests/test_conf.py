@@ -6,12 +6,16 @@ CONFIGURATION = "tests/celty.conf"
 
 class TestConfigurationReaderExists(unittest.TestCase):
     def test_loadConfReader(self):
-        conf.ConfReader(open(CONFIGURATION))
+        with open(CONFIGURATION) as conf_file:
+            conf.ConfReader(conf_file)
 
 class TestConfigurationReader(unittest.TestCase):
     def setUp(self):
-        self.reader = conf.ConfReader(open(CONFIGURATION))
+        self.conf_file = open(CONFIGURATION)
+        self.reader = conf.ConfReader(self.conf_file)
 
+    def tearDown(self):
+        self.conf_file.close()
 
     def test_dataAreImportedCorrectly(self):
         try:

@@ -39,7 +39,11 @@ class TestTorrentInfoInitialization(unittest.TestCase):
 
 class TestTorrentPatternFromSeries(unittest.TestCase):
     def setUp(self):
-        self.conf = conf.ConfReader(open('tests/celty.conf'))
+        self.conf_file = open("tests/celty.conf")
+        self.conf = conf.ConfReader(self.conf_file)
+
+    def tearDown(self):
+        self.conf_file.close()
 
     def test_patternFromSeriesConf_Nisekoi(self):
         self.assertEqual(
@@ -53,7 +57,11 @@ class TestTorrentPatternFromSeries(unittest.TestCase):
         
 class TestTorrentSeriesFromPattern(unittest.TestCase):
     def setUp(self):
-        self.conf = conf.ConfReader(open('tests/celty.conf'))
+        self.conf_file = open("tests/celty.conf")
+        self.conf = conf.ConfReader(self.conf_file)
+
+    def tearDown(self):
+        self.conf_file.close()
 
     def test_seriesFromPattern_Nisekoi(self):
         self.assertEqual(
@@ -78,4 +86,9 @@ class TestTorrentSeriesFromPattern(unittest.TestCase):
         self.assertEqual(
             torrent.TorrentInfo.seriesFromPattern("[Akindo-SSK] Shigatsu wa Kimi no Uso - 13 [TV][720p][Sub ITA][DADB0BED].mkv.torrent", self.conf),
             self.conf.extractShowInfo("Shigatsu")
+            )
+
+        self.assertEqual(
+            torrent.TorrentInfo.seriesFromPattern("[Owari-Pantaloni Rossi] GATE - Jieitai KAnochi nite Kaku Tatakaeri 11 [56189A48].mkv.torrent", self.conf),
+            self.conf.extractShowInfo("GATE")
             )
