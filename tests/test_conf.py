@@ -103,7 +103,11 @@ class TestConfigurationReaderDouble(unittest.TestCase):
 
 class TestConfigurationReaderErrors(unittest.TestCase):
     def setUp(self):
-        self.reader = conf.ConfReader(open(CONFIGURATION))
+        self.conf_file = open(CONFIGURATION)
+        self.reader = conf.ConfReader(self.conf_file)
+
+    def tearDown(self):
+        self.conf_file.close()
 
     @unittest.skip("a single string is valid yaml. IOErrors are, with this modification, handled outside confReader.")
     def test_invalidMiyukiPath(self):

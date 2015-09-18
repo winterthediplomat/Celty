@@ -118,7 +118,6 @@ def internal_add(miyuki_path, torrent_path):
 def get(miyuki_path, variable):
     """
     please note that the variable must be the same you modify in the conf!
-    for now, it works only for global variables.
     
     e.g: if you want to know if notifications are enabled, ask `celty get notifications.enabled`.
          for the watchdir path, ask `celty get watchDir`
