@@ -52,29 +52,35 @@ def start(miyuki_path):
         torrent_id = communicator.addTorrent(file_, {"dir":downloadFolder, "seed-time":seedingTime})
         logging.info("torrent {0} has gid {1}".format(file_, torrent_id))
 
-#@main.command()
-#def stop():
-#    """
-#    $ celty stop
-#
-#     stops the aria2c server specified.
-#     """
-#     logging.info("called celty stop")
-#     confReader = ConfReader(miyuki_path)
-#     logging.debug("created confReader, path is {}".format(miyuki_path))
-#     communicator = AriaCommunicator(confReader.aria2Host,
-#                                     confReader.aria2Port,
-#                                     confReader.aria2UseSecret,
-#                                     confReader.aria2FixedRPCSecret)
-#     logging.debug("created communicator")
-#     communicator.kill()
+@main.command()
+@click.argument("miyuki-path")
+def stop(miyuki_path):
+    """
+    stops the aria2c server specified.
+    """
+    logging.info("called celty stop")
+    confReader = ConfReader(miyuki_path)
+    logging.debug("created confReader, path is {}".format(miyuki_path))
+    communicator = AriaCommunicator(confReader.aria2Host,
+                                     confReader.aria2Port,
+                                     confReader.aria2UseSecret,
+                                     confReader.aria2FixedRPCSecret)
+    logging.debug("created communicator")
+    communicator.kill()
 
 @main.command()
-def start_aria(port=6969, secret="celtyftw"):
+@click.argument("miyuki-path")
+def start_aria(miyuki_path):
     """
     starts aria2
     """
     logging.info("called `celty start_aria`")
+    confReader = ConfReader(miyuki_path)
+    logging.debug("created confReader, path is {}".format(miyuki_path))
+    communicator = AriaCommunicator(confReader.aria2Host,
+                                     confReader.aria2Port,
+                                     confReader.aria2UseSecret,
+                                     confReader.aria2FixedRPCSecret)
     communicator = AriaCommunicator("localhost",
                                     port,
                                     True,
