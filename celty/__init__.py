@@ -12,15 +12,13 @@ import sys
 
 @click.group()
 def main():
-    """Where the journey begins..."""
+    """ Celty = Miyuki x aria2 OTP. """
     pass
 
 @main.command()
 @click.argument("miyuki-path")
 def start(miyuki_path):
     """
-    $ celty start miyuki-path
-
     connects to an aria2c server (starts one up if necessary) and loads
     all the torrents it finds in watch directory
     """
@@ -110,19 +108,23 @@ def internal_add(miyuki_path, torrent_path):
         downloadFolder = confReader.globalDownloadDir
 
     torrent_id = communicator.addTorrent(torrent_path+".torrent", {"dir":downloadFolder})
-    logging.info("added torrent {0} to aria2".format(torrent_id))
+    logging.info("added torrent {0} to aria2, saving it in".format(torrent_id, downloadFolder))
 
 @main.command()
 @click.argument("miyuki_path")
 @click.argument("variable")
 def get(miyuki_path, variable):
     """
+    prints the value of a variable inside a Celty (or miyuki) configuration file.
+
     please note that the variable must be the same you modify in the conf!
     
     e.g: if you want to know if notifications are enabled, ask `celty get notifications.enabled`.
          for the watchdir path, ask `celty get watchDir`
 
     return code is 1 if Celty cannot find the value in the configuration.
+
+    Note: no newlines are added to output, so you can use it in your bash scripts!
     """
     try:
         print(internal_get(miyuki_path, variable), end="")
